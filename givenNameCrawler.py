@@ -33,7 +33,7 @@ def parsePage(url, gender):
     try:
         html_doc = requests.get(url)
         soup = BeautifulSoup(html_doc.text)
-        sleep(randint(20,30))
+        # sleep(randint(20,30))
     except Exception,e:
         print str(e)
 
@@ -67,6 +67,24 @@ def parseNames(soup, gender):
             name = li.find("a").get_text(strip=True).encode('utf-8')
             print name
             writeName(name, gender)
+
+        # Check whether there's another page
+        for a in soup.find(id="mw-pages").find_all("a"):
+            if a.get_text(strip=True)=="next 200":
+                print "Parsing additional page..."
+                additionalUrl = a['href']
+
+                try:
+                    html_doc = requests.get( resolveSiteUrl(additionalUrl))
+                    soup = BeautifulSoup(html_doc.text)
+                    # sleep(randint(20,30))
+                    parseNames(soup, gender)
+                except Exception,e:
+                    print str(e)
+                
+                break
+                
+        
         return
 
     else:
@@ -85,6 +103,30 @@ def writeName(name, gender):
     fd = open('wiktionary_name_gender.csv','a')
     fd.write(name + "," + gender + "\n")
     fd.close()
-    
 
-main()
+    return
+
+
+def tester():
+
+    url = "http://en.wiktionary.org/wiki/Category:Danish_male_given_names"
+    gender = "test"
+
+    print "Parsing " + url
+
+    try:
+        html_doc = requests.get(url)
+        soup = BeautifulSoup(html_doc.text)
+        sleep(randint(20,30))
+    except Exception,e:
+        print str(e)
+
+    parseNames(soup, gender)
+
+    return
+      
+
+# main()
+
+tester()
+
