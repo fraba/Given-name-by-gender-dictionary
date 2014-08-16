@@ -33,7 +33,7 @@ def parsePage(url, gender):
     try:
         html_doc = requests.get(url)
         soup = BeautifulSoup(html_doc.text)
-        # sleep(randint(20,30))
+        sleep(randint(20,30))
     except Exception,e:
         print str(e)
 
@@ -126,7 +126,7 @@ def tester():
     return
       
 
-# main()
+main()
 
-tester()
+# tester()
 
