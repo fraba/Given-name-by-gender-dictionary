@@ -38,13 +38,14 @@ def parsePage(url, gender):
         print str(e)
 
     if soup.find(id="mw-subcategories"):
+        parseNames(soup, gender)
         urls = parseCategories(soup)
         for url in urls:
             parsePage(url, gender)
         return
         
     else:
-        names = parseNames(soup, gender)
+        parseNames(soup, gender)
         return
     
         
